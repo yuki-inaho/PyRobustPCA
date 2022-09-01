@@ -2,4 +2,7 @@
 .vscode
 .mypy_cache
 _skbuild/
-*.egg_info
+
+pywrapper_robust_pca.egg-info/
+__pycache__
+*.pyc
