@@ -1,0 +1,6 @@
+
+numpy
+pyod
+opencv-python
+jupyterlab
+matplotlib
