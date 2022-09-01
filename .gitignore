@@ -3,6 +3,6 @@
 .mypy_cache
 _skbuild/
 
-pywrapper_robust_pca.egg-info/
+PyRobustPCA.egg-info/
 __pycache__
 *.pyc

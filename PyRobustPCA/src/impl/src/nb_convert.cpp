@@ -1,6 +1,6 @@
 #include "nb_convert.h"
 
-NBTensorMatrixXd ConvertEigenXdToNBTensor(const Eigen::MatrixXd &mat)
+NBTensorMatrixXd ConvertEigenMatrixXdToNBTensor(const Eigen::MatrixXd &mat)
 {
     size_t n_cols = mat.cols();
     size_t n_rows = mat.rows();
@@ -20,9 +20,24 @@ NBTensorMatrixXd ConvertEigenXdToNBTensor(const Eigen::MatrixXd &mat)
     return tensor;
 }
 
-Eigen::MatrixXd ConvertNBTensorToEigenXd(NBTensorMatrixXd &tensor)
+NBTensorVectorXd ConvertEigenVectorXdToNBTensor(const Eigen::VectorXd &vec)
 {
-    /* @TODO: validate NxD
+    size_t n_elems = vec.size();
+    size_t shape[1] = {n_elems};
+    double *data = new double[n_elems]{0};
+    nb::capsule deleter(data, [](void *data) noexcept
+                        { delete[](double *) data; });
+    NBTensorVectorXd tensor(data, 1, shape, deleter);
+    for (size_t i = 0; i < n_elems; ++i)
+    {
+        tensor(i) = vec(i);
+    }
+    return tensor;
+}
+
+Eigen::MatrixXd ConvertNBTensorToEigenMatrixXd(NBTensorMatrixXd &tensor)
+{
+    /* @TODO: validate NXd
      */
     size_t n_cols = tensor.shape(1);
     size_t n_rows = tensor.shape(0);

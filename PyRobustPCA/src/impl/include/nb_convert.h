@@ -9,12 +9,15 @@
 
 namespace nb = nanobind;
 using namespace nb::literals;
+
 using NBTensorMatrixXd = nb::tensor<nb::numpy, double, nb::shape<nb::any, nb::any>, nb::c_contig, nb::device::cpu>;
+using NBTensorVectorXd = nb::tensor<nb::numpy, double, nb::shape<nb::any>, nb::c_contig, nb::device::cpu>;
 
 /* @TODO: add type and shape validation
    @TODO: use std::copy?
 */
-Eigen::MatrixXd ConvertNBTensorToEigenXd(NBTensorMatrixXd &tensor);
-NBTensorMatrixXd ConvertEigenXdToNBTensor(const Eigen::MatrixXd &mat);
+NBTensorMatrixXd ConvertEigenMatrixXdToNBTensor(const Eigen::MatrixXd &mat);
+NBTensorVectorXd ConvertEigenVectorXdToNBTensor(const Eigen::VectorXd &vec);
+Eigen::MatrixXd ConvertNBTensorToEigenMatrixXd(NBTensorMatrixXd &tensor);
 
 #endif // PYROBUSTPCA_NB_CONVERT_HPP
