@@ -18,6 +18,7 @@ using NBTensorVectorXd = nb::tensor<nb::numpy, double, nb::shape<nb::any>, nb::c
 */
 NBTensorMatrixXd ConvertEigenMatrixXdToNBTensor(const Eigen::MatrixXd &mat);
 NBTensorVectorXd ConvertEigenVectorXdToNBTensor(const Eigen::VectorXd &vec);
-Eigen::MatrixXd ConvertNBTensorToEigenMatrixXd(NBTensorMatrixXd &tensor);
+Eigen::MatrixXd ConvertNBTensorToEigenMatrixXd(NBTensorMatrixXd &tensor_mat);
+Eigen::VectorXd ConvertNBTensorToEigenVectorXd(NBTensorVectorXd &tensor_vec);
 
 #endif // PYROBUSTPCA_NB_CONVERT_HPP

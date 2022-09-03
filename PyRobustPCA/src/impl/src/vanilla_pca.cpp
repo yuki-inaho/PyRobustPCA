@@ -15,7 +15,6 @@ void VanillaPCA::Fit(NBTensorMatrixXd &data)
 
     // Calculate variance-covariance matrix
     Eigen::MatrixXd S = X_centrized.transpose() * X_centrized / (num_data - 1);
-    std::cout << "S" << S << std::endl;
     Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigen_solver;
     eigen_solver.compute(S);
 

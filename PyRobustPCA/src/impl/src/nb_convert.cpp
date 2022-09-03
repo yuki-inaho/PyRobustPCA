@@ -1,4 +1,5 @@
 #include "nb_convert.h"
+#include <iostream>
 
 NBTensorMatrixXd ConvertEigenMatrixXdToNBTensor(const Eigen::MatrixXd &mat)
 {
@@ -35,19 +36,32 @@ NBTensorVectorXd ConvertEigenVectorXdToNBTensor(const Eigen::VectorXd &vec)
     return tensor;
 }
 
-Eigen::MatrixXd ConvertNBTensorToEigenMatrixXd(NBTensorMatrixXd &tensor)
+Eigen::MatrixXd ConvertNBTensorToEigenMatrixXd(NBTensorMatrixXd &tensor_mat)
 {
     /* @TODO: validate NXd
      */
-    size_t n_cols = tensor.shape(1);
-    size_t n_rows = tensor.shape(0);
+    size_t n_cols = tensor_mat.shape(1);
+    size_t n_rows = tensor_mat.shape(0);
     Eigen::MatrixXd mat = Eigen::MatrixXd::Zero(n_rows, n_cols);
     for (size_t y = 0; y < n_rows; ++y)
     {
         for (size_t x = 0; x < n_cols; ++x)
         {
-            mat(y, x) = (double)tensor(y, x);
+            mat(y, x) = (double)tensor_mat(y, x);
         }
     }
     return mat;
+}
+
+
+Eigen::VectorXd ConvertNBTensorToEigenVectorXd(NBTensorVectorXd &tensor_vec)
+{
+    /* @TODO: use std::copy & tensor.stride
+     */
+    Eigen::VectorXd vec(tensor_vec.shape(0));
+    for (size_t i = 0; i < tensor_vec.shape(0); i++)
+    {
+        vec(i) = tensor_vec(i);
+    }
+    return vec;
 }
