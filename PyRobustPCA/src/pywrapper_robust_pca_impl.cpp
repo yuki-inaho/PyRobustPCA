@@ -23,4 +23,5 @@ NB_MODULE(pywrapper_robust_pca_impl, m)
         .def_readonly("num_data", &VanillaPCA::num_data)
         .def_readonly("num_features", &VanillaPCA::num_features);
     m.def("calculate_median", &CalculateMedianNB, "data"_a);
+    m.def("calculate_mad", &CalculateMedianAbsoluteDeviationNB, "data"_a);
 }

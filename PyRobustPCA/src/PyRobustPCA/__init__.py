@@ -1,1 +1,1 @@
-from .pywrapper_robust_pca_impl import VanillaPCA, calculate_median
+from .pywrapper_robust_pca_impl import VanillaPCA, calculate_median, calculate_mad
