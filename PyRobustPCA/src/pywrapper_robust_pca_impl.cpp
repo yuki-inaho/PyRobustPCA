@@ -30,6 +30,10 @@ NBTensorVectorXd CalculateMahalanobisDistanceNB(NBTensorMatrixXd &data, NBTensor
     return ConvertEigenVectorXdToNBTensor(CalculateMahalanobisDistance(data_eigenxd, mu_eigenxd, sigma_mat_eigenxd));
 };
 
+NBTensorMatrixXd GenerateCorrelationMatrixNB(NBTensorMatrixXd &data, double const_weighted_mean, double const_winsored_mean)
+{
+    return ConvertEigenMatrixXdToNBTensor(GenerateCorrelationMatrix(ConvertNBTensorToEigenMatrixXd(data), const_weighted_mean, const_winsored_mean));
+};
 
 /* @TODO: simplify NBTensorMatrixXd?
  */
@@ -46,4 +50,5 @@ NB_MODULE(pywrapper_robust_pca_impl, m)
     m.def("median", &CalculateMedianNB, "data"_a);
     m.def("mad", &CalculateMedianAbsoluteDeviationNB, "data"_a);
     m.def("mahalanobis_distance", &CalculateMahalanobisDistanceNB, "data"_a, "mu"_a, "sigma_mat"_a);
+    m.def("generate_correlation_matrix", &GenerateCorrelationMatrixNB, "data"_a, "const_weighted_mean"_a = 4.5, "const_winsored_mean"_a = 3.0);
 }
