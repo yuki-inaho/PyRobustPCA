@@ -50,6 +50,9 @@ find_package(nanobind CONFIG REQUIRED)
 # Eigen (required)
 find_package(Eigen3 REQUIRED)
 
+# Boost
+find_package(Boost REQUIRED)
+
 # Build the actual extension module
 nanobind_add_module(
   pywrapper_robust_pca_impl
@@ -65,6 +68,7 @@ target_include_directories(
   PRIVATE
   ${OpenCV_INCLUDE_DIRS}
   ${EIGEN_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
   src/impl/include
 )
 
@@ -72,6 +76,7 @@ target_link_libraries(
   pywrapper_robust_pca_impl
   PRIVATE
   ${OpenCV_LIBRARIES}
+  ${Boost_LIBRARIES}
   Eigen3::Eigen
 )
 

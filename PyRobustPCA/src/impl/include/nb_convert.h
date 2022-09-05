@@ -13,6 +13,7 @@ using namespace nb::literals;
 using NBTensorMatrixXd = nb::tensor<nb::numpy, double, nb::shape<nb::any, nb::any>, nb::c_contig, nb::device::cpu>;
 using NBTensorVectorXd = nb::tensor<nb::numpy, double, nb::shape<nb::any>, nb::c_contig, nb::device::cpu>;
 
+
 /* @TODO: add type and shape validation
    @TODO: use std::copy?
 */

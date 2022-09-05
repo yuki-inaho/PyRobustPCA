@@ -4,8 +4,11 @@
 #include "vanilla_pca.h"
 #include "stat_utils.h"
 
+#include <boost/math/distributions/chi_squared.hpp>
+
 namespace nb = nanobind;
 using namespace nb::literals;
+
 using NBTensorMatrixXd = nb::tensor<nb::numpy, double, nb::shape<nb::any, nb::any>, nb::c_contig, nb::device::cpu>;
 using NBTensorVectorXd = nb::tensor<nb::numpy, double, nb::shape<nb::any>, nb::c_contig, nb::device::cpu>;
 
@@ -26,6 +29,7 @@ NBTensorVectorXd CalculateMahalanobisDistanceNB(NBTensorMatrixXd &data, NBTensor
     Eigen::MatrixXd sigma_mat_eigenxd = ConvertNBTensorToEigenMatrixXd(sigma_mat);
     return ConvertEigenVectorXdToNBTensor(CalculateMahalanobisDistance(data_eigenxd, mu_eigenxd, sigma_mat_eigenxd));
 };
+
 
 /* @TODO: simplify NBTensorMatrixXd?
  */
