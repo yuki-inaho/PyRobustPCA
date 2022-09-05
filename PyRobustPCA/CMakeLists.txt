@@ -60,6 +60,7 @@ nanobind_add_module(
   src/pywrapper_robust_pca_impl.cpp
   src/impl/src/vanilla_pca.cpp
   src/impl/src/robust_pca_ogk.cpp
+  src/impl/src/robust_pca_detmcd.cpp
   src/impl/src/nb_convert.cpp
   src/impl/src/stat_utils.cpp
 )

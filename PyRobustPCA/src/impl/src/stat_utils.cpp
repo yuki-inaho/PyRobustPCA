@@ -213,7 +213,7 @@ bool CovarianceOGK(const Eigen::MatrixXd &data_mat, Eigen::VectorXd &location, E
     location = data_mat_inlier.colwise().mean();
     Eigen::MatrixXd data_mat_inlier_centrized = data_mat_inlier;
     data_mat_inlier_centrized.rowwise() -= location.transpose();
-    covariance = (data_mat_inlier_centrized.transpose() * data_mat_inlier_centrized).array() / (n_observation - 1);
+    covariance = (data_mat_inlier_centrized.transpose() * data_mat_inlier_centrized).array() / (data_mat_inlier_centrized.rows() - 1);
 
     return true;
 };

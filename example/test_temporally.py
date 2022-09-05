@@ -1,4 +1,4 @@
-from PyRobustPCA import VanillaPCA, RobustPCAOGK
+from PyRobustPCA import VanillaPCA, RobustPCAOGK, RobustPCADetMCD
 from PyRobustPCA import median as median_
 from PyRobustPCA import mad as mad_
 from PyRobustPCA import mahalanobis_distance
@@ -110,7 +110,7 @@ def mahalanobis(x, mu, sigma_mat):
     return distances
 
 
-X = np.random.rand(300).reshape(-1, 3).astype(np.float64)
+X = np.random.rand(120).reshape(-1, 3).astype(np.float64)
 mu = np.mean(X, axis=0)
 sigma_mat = np.cov(X.T)
 print("mdist diff: ", np.mean(mahalanobis(X, mu, sigma_mat) - mahalanobis_distance(X, mu, sigma_mat)))
@@ -122,9 +122,20 @@ print(covariance_ogk_(X))
 print("vanilla")
 pca = VanillaPCA()
 pca.fit(X)
+print(pca.get_mean())
 print(pca.get_principal_components())
+
 
 print("ogk")
 rpca_ogk = RobustPCAOGK()
 rpca_ogk.fit(X)
+print(rpca_ogk.get_mean())
 print(rpca_ogk.get_principal_components())
+print(rpca_ogk.get_scores())
+
+print("detmcd")
+rpca_detmcd = RobustPCADetMCD()
+rpca_detmcd.fit(X)
+print(rpca_detmcd.get_mean())
+print(rpca_detmcd.get_principal_components())
+print(rpca_detmcd.get_scores())

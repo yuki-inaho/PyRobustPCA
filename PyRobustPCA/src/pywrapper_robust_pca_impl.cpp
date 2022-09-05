@@ -3,6 +3,7 @@
 
 #include "vanilla_pca.h"
 #include "robust_pca_ogk.h"
+#include "robust_pca_detmcd.h"
 #include "stat_utils.h"
 
 #include <boost/math/distributions/chi_squared.hpp>
@@ -72,6 +73,14 @@ NB_MODULE(pywrapper_robust_pca_impl, m)
         .def("get_principal_components", &RobustPCAOGK::GetPrincipalComponents)
         .def_readonly("num_data", &RobustPCAOGK::num_data)
         .def_readonly("num_features", &RobustPCAOGK::num_features);
+    nb::class_<RobustPCADetMCD>(m, "RobustPCADetMCD")
+        .def(nb::init<>())
+        .def("fit", &RobustPCADetMCD::Fit, "data"_a, "n_iter"_a = 3, "const_weighted_mean"_a = 4.5, "const_winsored_mean"_a = 3.0)
+        .def("get_mean", &RobustPCADetMCD::GetMean)
+        .def("get_scores", &RobustPCADetMCD::GetScores)
+        .def("get_principal_components", &RobustPCADetMCD::GetPrincipalComponents)
+        .def_readonly("num_data", &RobustPCADetMCD::num_data)
+        .def_readonly("num_features", &RobustPCADetMCD::num_features);
     m.def("median", &CalculateMedianNB, "data"_a);
     m.def("mad", &CalculateMedianAbsoluteDeviationNB, "data"_a);
     m.def("mahalanobis_distance", &CalculateMahalanobisDistanceNB, "data"_a, "mu"_a, "sigma_mat"_a);
