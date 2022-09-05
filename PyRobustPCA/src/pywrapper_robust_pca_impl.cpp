@@ -2,6 +2,7 @@
 #include <nanobind/tensor.h>
 
 #include "vanilla_pca.h"
+#include "robust_pca_ogk.h"
 #include "stat_utils.h"
 
 #include <boost/math/distributions/chi_squared.hpp>
@@ -35,6 +36,22 @@ NBTensorMatrixXd GenerateCorrelationMatrixNB(NBTensorMatrixXd &data, double cons
     return ConvertEigenMatrixXdToNBTensor(GenerateCorrelationMatrix(ConvertNBTensorToEigenMatrixXd(data), const_weighted_mean, const_winsored_mean));
 };
 
+nb::list CovarianceOGKNB(NBTensorMatrixXd &data, double const_weighted_mean, double const_winsored_mean)
+{
+    nb::list results;
+    Eigen::VectorXd location;
+    Eigen::MatrixXd covariance;
+    bool status = CovarianceOGK(ConvertNBTensorToEigenMatrixXd(data), location, covariance, const_weighted_mean, const_winsored_mean);
+    std::cout << "test:" << int(status) << std::endl;
+    if (!status)
+    {
+        return results;
+    }
+    results.append(ConvertEigenVectorXdToNBTensor(location));
+    results.append(ConvertEigenMatrixXdToNBTensor(covariance));
+    return results;
+}
+
 /* @TODO: simplify NBTensorMatrixXd?
  */
 NB_MODULE(pywrapper_robust_pca_impl, m)
@@ -47,8 +64,17 @@ NB_MODULE(pywrapper_robust_pca_impl, m)
         .def("get_principal_components", &VanillaPCA::GetPrincipalComponents)
         .def_readonly("num_data", &VanillaPCA::num_data)
         .def_readonly("num_features", &VanillaPCA::num_features);
+    nb::class_<RobustPCAOGK>(m, "RobustPCAOGK")
+        .def(nb::init<>())
+        .def("fit", &RobustPCAOGK::Fit, "data"_a, "const_weighted_mean"_a = 4.5, "const_winsored_mean"_a = 3.0)
+        .def("get_mean", &RobustPCAOGK::GetMean)
+        .def("get_scores", &RobustPCAOGK::GetScores)
+        .def("get_principal_components", &RobustPCAOGK::GetPrincipalComponents)
+        .def_readonly("num_data", &RobustPCAOGK::num_data)
+        .def_readonly("num_features", &RobustPCAOGK::num_features);
     m.def("median", &CalculateMedianNB, "data"_a);
     m.def("mad", &CalculateMedianAbsoluteDeviationNB, "data"_a);
     m.def("mahalanobis_distance", &CalculateMahalanobisDistanceNB, "data"_a, "mu"_a, "sigma_mat"_a);
     m.def("generate_correlation_matrix", &GenerateCorrelationMatrixNB, "data"_a, "const_weighted_mean"_a = 4.5, "const_winsored_mean"_a = 3.0);
+    m.def("covariance_ogk", &CovarianceOGKNB, "data"_a, "const_weighted_mean"_a = 4.5, "const_winsored_mean"_a = 3.0);
 }

@@ -59,6 +59,7 @@ nanobind_add_module(
   NB_STATIC # Build static libnanobind (the extension module itself remains a shared library)
   src/pywrapper_robust_pca_impl.cpp
   src/impl/src/vanilla_pca.cpp
+  src/impl/src/robust_pca_ogk.cpp
   src/impl/src/nb_convert.cpp
   src/impl/src/stat_utils.cpp
 )
