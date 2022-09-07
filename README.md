@@ -1,6 +1,6 @@
 # Installation
 ```
-git clone PyRobustPCA
+git clone https://github.com/yuki-inaho/PyRobustPCA
 cd PyRobustPCA
 pip install .
 ```
