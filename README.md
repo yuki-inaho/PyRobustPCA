@@ -5,6 +5,9 @@ cd PyRobustPCA/PyRobustPCA
 pip install .
 ```
 
+# Usage
+[pca.ipynb](https://github.com/yuki-inaho/PyRobustPCA/blob/main/example/pca.ipynb)
+
 # TODO
 - [ ] Overall refactoring and add comments
 - [ ] Implement some test processes as pytest procedures
