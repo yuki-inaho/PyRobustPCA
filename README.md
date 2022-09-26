@@ -4,6 +4,10 @@ git clone https://github.com/yuki-inaho/PyRobustPCA
 cd PyRobustPCA/PyRobustPCA
 pip install .
 ```
+or
+```
+pip install "git+https://github.com/yuki-inaho/PyRobustPCA.git#egg=PyRobustPCA&subdirectory=PyRobustPCA"
+```
 
 # Usage
 [pca.ipynb](https://github.com/yuki-inaho/PyRobustPCA/blob/main/example/pca.ipynb)
