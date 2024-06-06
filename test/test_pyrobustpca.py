@@ -1,14 +1,17 @@
+import numpy as np
+import pytest
+from scipy import stats
+from itertools import combinations
+from functools import partial
+
 from PyRobustPCA import VanillaPCA, RobustPCAOGK, RobustPCADetMCD
 from PyRobustPCA import median as median_
 from PyRobustPCA import mad as mad_
 from PyRobustPCA import mahalanobis_distance
 from PyRobustPCA import generate_correlation_matrix as generate_correlation_matrix_
 from PyRobustPCA import covariance_ogk as covariance_ogk_
-from scipy import stats
-from itertools import combinations
-from functools import partial
 
-import numpy as np
+# Define additional functions required for testing
 
 
 def calculate_bisquare_weights(x, c):
@@ -18,7 +21,6 @@ def calculate_bisquare_weights(x, c):
 
 
 def mad(data, scale_const=1.482602218505602):
-    """scale_const = 1 / scipy.stats.Gaussian.ppf(3 / 4.0)"""
     center_med = np.median(data)
     return scale_const * np.median(np.abs(data - center_med))
 
@@ -38,7 +40,6 @@ def calculate_robust_mean(data, cm=4.5):
 
 
 def scale_tau(data, cm=4.5, cs=3.0):
-    """tau estimator of univariate scale"""
     x = np.asarray(data)
     n_obs = len(x)
     mad_x = mad(x)
@@ -48,7 +49,6 @@ def scale_tau(data, cm=4.5, cs=3.0):
 
 
 def generate_correlation_matrix(data):
-    """Calculating Corrilation Matrix"""
     x = np.asarray(data)
     _, n_feature = x.shape
     corr = np.diag(np.ones(n_feature, dtype=np.float32))
@@ -63,14 +63,10 @@ def generate_correlation_matrix(data):
 
 
 def covariance_ogk(data, cm=4.5, cs=3.0):
-    """Calculating Covariance Matrix with the Orthogonal Gnanadesikan-Kettenring method"""
     assert data.ndim == 2
-
     n_obs, n_feature = data.shape
     x = data
-    # _, scale_x = scale_tau(x)
     scale_x = np.apply_along_axis(partial(scale_tau, cm=cm, cs=cs), 0, x)
-
     D = np.diag(scale_x)
     D_inv = np.linalg.inv(D)
     z = x.dot(D_inv.T)
@@ -80,16 +76,12 @@ def covariance_ogk(data, cm=4.5, cs=3.0):
     eigvalues = eigvalues[indices_argsort]
     E = E[:, indices_argsort]
     V = z.dot(E)
-
-    # coarse parameter estimation
     scale_v = np.apply_along_axis(partial(scale_tau, cm=cm, cs=cs), 0, V)
     sigma_z = (E.dot(np.diag(scale_v**2))).dot(E.T)
     m_vec = np.apply_along_axis(partial(calculate_robust_mean, cm=cm), 0, V).reshape(-1, 1)
     mu_z = E.dot(m_vec)
     mu_rawogk = D.dot(mu_z).flatten()
     sigma_rawogk = D.dot(sigma_z).dot(D.T)
-
-    # parameter refinement
     dist_mahalanobis = mahalanobis(x, mu_rawogk, sigma_rawogk)
     d_squared_med = np.median(dist_mahalanobis**2)
     cutoff = d_squared_med * stats.chi2.ppf(0.90, n_feature) / stats.chi2.ppf(0.5, n_feature)
@@ -97,7 +89,6 @@ def covariance_ogk(data, cm=4.5, cs=3.0):
     sample = data[mask, :]
     loc = sample.mean(0)
     cov = np.cov(sample.T)
-
     return loc, cov
 
 
@@ -110,32 +101,54 @@ def mahalanobis(x, mu, sigma_mat):
     return distances
 
 
-X = np.random.rand(120).reshape(-1, 3).astype(np.float64)
-mu = np.mean(X, axis=0)
-sigma_mat = np.cov(X.T)
-print("mdist diff: ", np.mean(mahalanobis(X, mu, sigma_mat) - mahalanobis_distance(X, mu, sigma_mat)))
-
-print("cov")
-print(covariance_ogk(X))
-print(covariance_ogk_(X))
-
-print("vanilla")
-pca = VanillaPCA()
-pca.fit(X)
-print(pca.get_mean())
-print(pca.get_principal_components())
+# Define test cases
 
 
-print("ogk")
-rpca_ogk = RobustPCAOGK()
-rpca_ogk.fit(X)
-print(rpca_ogk.get_mean())
-print(rpca_ogk.get_principal_components())
-print(rpca_ogk.get_scores())
+def test_mahalanobis_distance():
+    X = np.random.rand(120).reshape(-1, 3).astype(np.float64)
+    mu = np.mean(X, axis=0)
+    sigma_mat = np.cov(X.T)
+    assert np.allclose(mahalanobis(X, mu, sigma_mat), mahalanobis_distance(X, mu, sigma_mat))
 
-print("detmcd")
-rpca_detmcd = RobustPCADetMCD()
-rpca_detmcd.fit(X)
-print(rpca_detmcd.get_mean())
-print(rpca_detmcd.get_principal_components())
-print(rpca_detmcd.get_scores())
+
+def test_covariance_ogk():
+    X = np.random.rand(120).reshape(-1, 3).astype(np.float64)
+    loc, cov = covariance_ogk(X)
+    loc_, cov_ = covariance_ogk_(X)
+    assert np.allclose(loc, loc_)
+    assert np.allclose(cov, cov_)
+
+
+def test_vanilla_pca():
+    X = np.random.rand(120).reshape(-1, 3).astype(np.float64)
+    pca = VanillaPCA()
+    pca.fit(X)
+    mean = pca.get_mean()
+    components = pca.get_principal_components()
+    assert mean.shape == (3,)
+    assert components.shape == (3, 3)
+
+
+def test_robust_pca_ogk():
+    X = np.random.rand(120).reshape(-1, 3).astype(np.float64)
+    rpca_ogk = RobustPCAOGK()
+    rpca_ogk.fit(X)
+    mean = rpca_ogk.get_mean()
+    components = rpca_ogk.get_principal_components()
+    scores = rpca_ogk.get_scores()
+
+    assert mean.shape == (3,)
+    assert components.shape == (3, 3)
+    assert scores.shape == (3,)
+
+
+def test_robust_pca_detmcd():
+    X = np.random.rand(120).reshape(-1, 3).astype(np.float64)
+    rpca_detmcd = RobustPCADetMCD()
+    rpca_detmcd.fit(X)
+    mean = rpca_detmcd.get_mean()
+    components = rpca_detmcd.get_principal_components()
+    scores = rpca_detmcd.get_scores()
+    assert mean.shape == (3,)
+    assert components.shape == (3, 3)
+    assert scores.shape == (3,)

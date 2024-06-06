@@ -1,12 +1,16 @@
-cmake_minimum_required(VERSION 3.18...3.22)
-
 project(PyRobustPCA)
+
+cmake_minimum_required(VERSION 3.18...3.22)
 
 # Set build type
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE "Release")
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
 endif()
+
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_compile_options(-Wall -Wextra)
 add_compile_options(
@@ -68,6 +72,7 @@ nanobind_add_module(
 target_include_directories(
   pywrapper_robust_pca_impl
   PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}
   ${OpenCV_INCLUDE_DIRS}
   ${EIGEN_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}

@@ -6,3 +6,4 @@ _skbuild/
 PyRobustPCA.egg-info/
 __pycache__
 *.pyc
+.pytest_cache
