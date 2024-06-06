@@ -5,8 +5,13 @@ The following dependencies are required to build and run the project:
 - CMake (version 3.18 - 3.22)
 - Python (version >= 3.8)
 - Eigen3
-- Boost
-
+```
+sudo apt-get install libeigen3-dev
+```
+- Boost (to use <boost/math/distributions/chi_squared.hpp>)
+```
+sudo apt-get install libboost-math-dev
+```
 
 # Installation
 
