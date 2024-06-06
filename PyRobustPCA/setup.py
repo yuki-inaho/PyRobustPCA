@@ -18,5 +18,5 @@ setup(
     cmake_args=["-DCMAKE_BUILD_TYPE=Release"],
     cmake_install_dir="src/PyRobustPCA",
     include_package_data=True,
-    python_requires=">=3.6",
+    python_requires=">=3.8",
 )
