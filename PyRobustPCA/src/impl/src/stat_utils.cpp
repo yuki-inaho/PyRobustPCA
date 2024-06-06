@@ -129,7 +129,9 @@ bool CovarianceOGK(const Eigen::MatrixXd &data_mat, Eigen::VectorXd &location, E
         Eigen::VectorXd vec_i = data_mat.col(i);
         double m_i = CalculateRobustMean(vec_i, const_weighted_mean);
         double s_i = CalculateRobustScale(vec_i, m_i, const_winsored_mean);
-        D(i, i) = s_i;
+
+        // Add micro constant to avoid zero division
+        D(i, i) = s_i + 1e-10;
     }
     Eigen::MatrixXd D_inv = D.inverse();
 
@@ -145,6 +147,7 @@ bool CovarianceOGK(const Eigen::MatrixXd &data_mat, Eigen::VectorXd &location, E
     eigen_solver.compute(U);
     Eigen::VectorXd eig_values = eigen_solver.eigenvalues();
     Eigen::MatrixXd eig_vectors = eigen_solver.eigenvectors();
+
     if (eigen_solver.info() != Eigen::Success)
     {
         return false;
@@ -202,6 +205,13 @@ bool CovarianceOGK(const Eigen::MatrixXd &data_mat, Eigen::VectorXd &location, E
             indices_inlier.push_back(i);
     }
 
+    // if the number of inliers is less than the number of features, return false
+    if (indices_inlier.size() < n_features)
+    {
+        return false;
+    }
+
+    // if the number of inliers is less than the number of features, return false
     Eigen::MatrixXd data_mat_inlier = Eigen::MatrixXd::Zero(indices_inlier.size(), n_features);
     int inlier_index = 0;
     for (auto it = indices_inlier.begin(); it != indices_inlier.end(); ++it, ++inlier_index)
