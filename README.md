@@ -6,7 +6,6 @@ The following dependencies are required to build and run the project:
 - Python (version >= 3.8)
 - Eigen3
 - Boost
-- nanobind (v1.9.2)
 
 
 # Installation
