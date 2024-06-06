@@ -1,9 +1,9 @@
 #include "vanilla_pca.h"
 #include <iostream>
 
-void VanillaPCA::Fit(NBTensorMatrixXd &data)
+void VanillaPCA::Fit(NBMatrixXd &data)
 {
-    X_ = ConvertNBTensorToEigenMatrixXd(data);
+    X_ = ConvertNBArrayToEigenMatrixXd(data);
     num_features = X_.cols();
     num_data = X_.rows();
 
@@ -21,7 +21,7 @@ void VanillaPCA::Fit(NBTensorMatrixXd &data)
     Eigen::MatrixXd V = eigen_solver.eigenvectors();
     Eigen::VectorXd D = eigen_solver.eigenvalues();
 
-    mean_nb_ = ConvertEigenVectorXdToNBTensor(mean_);
-    scores_nb_ = ConvertEigenVectorXdToNBTensor(D);
-    principal_components_nb_ = ConvertEigenMatrixXdToNBTensor(V);
+    mean_nb_ = ConvertEigenVectorXdToNBArray(mean_);
+    scores_nb_ = ConvertEigenVectorXdToNBArray(D);
+    principal_components_nb_ = ConvertEigenMatrixXdToNBArray(V);
 }

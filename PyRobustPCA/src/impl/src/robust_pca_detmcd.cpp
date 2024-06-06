@@ -1,10 +1,10 @@
 #include "robust_pca_detmcd.h"
 
-bool RobustPCADetMCD::Fit(NBTensorMatrixXd &data, int n_iter, double const_weighted_mean, double const_winsored_mean)
+bool RobustPCADetMCD::Fit(NBMatrixXd &data, int n_iter, double const_weighted_mean, double const_winsored_mean)
 {
     /* @Add assert line for shape validation
      */
-    X_ = ConvertNBTensorToEigenMatrixXd(data);
+    X_ = ConvertNBArrayToEigenMatrixXd(data);
     num_features = X_.cols();
     num_data = X_.rows();
 
@@ -98,8 +98,8 @@ bool RobustPCADetMCD::Fit(NBTensorMatrixXd &data, int n_iter, double const_weigh
         V.col(i) = eig_vectors.col(indices_sorted[i]);
     }
 
-    mean_nb_ = ConvertEigenVectorXdToNBTensor(location_k);
-    scores_nb_ = ConvertEigenVectorXdToNBTensor(scores);
-    principal_components_nb_ = ConvertEigenMatrixXdToNBTensor(V);
+    mean_nb_ = ConvertEigenVectorXdToNBArray(location_k);
+    scores_nb_ = ConvertEigenVectorXdToNBArray(scores);
+    principal_components_nb_ = ConvertEigenMatrixXdToNBArray(V);
     return true;
 }
