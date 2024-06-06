@@ -1,3 +1,14 @@
+# Dependencies
+
+The following dependencies are required to build and run the project:
+
+- CMake (version 3.18 - 3.22)
+- Python (version >= 3.8)
+- Eigen3
+- Boost
+- nanobind (v1.9.2)
+
+
 # Installation
 
 ```
@@ -29,11 +40,6 @@ After installing pytest, you can run the tests with the following command:
 ```bash
 pytest test/test_pyrobustpca.py
 ```
-
-# TODO
-
-- [ ] Overall refactoring and add comments
-- [ ] Implement some test processes as pytest procedures
 
 # References
 
