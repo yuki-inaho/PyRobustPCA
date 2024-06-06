@@ -1,6 +1,3 @@
-#include <nanobind/nanobind.h>
-#include <nanobind/ndarray.h>
-
 #include "vanilla_pca.h"
 #include "robust_pca_ogk.h"
 #include "robust_pca_detmcd.h"
@@ -10,9 +7,6 @@
 
 namespace nb = nanobind;
 using namespace nb::literals;
-
-using NBMatrixXd = nb::ndarray<nb::numpy, double, nb::shape<nb::any, nb::any>, nb::c_contig, nb::device::cpu>;
-using NBVectorXd = nb::ndarray<nb::numpy, double, nb::shape<nb::any>, nb::c_contig, nb::device::cpu>;
 
 double CalculateMedianNB(NBVectorXd &data)
 {

@@ -9,9 +9,6 @@
 #include <Eigen/Dense>
 #include "nb_convert.h"
 
-using NBMatrixXd = nb::ndarray<nb::numpy, double, nb::shape<nb::any, nb::any>, nb::c_contig, nb::device::cpu>;
-using NBVectorXd = nb::ndarray<nb::numpy, double, nb::shape<nb::any>, nb::c_contig, nb::device::cpu>;
-
 /*
     @TODO: handling the result getter calling when Fit() is not done yet
 */
